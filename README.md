@@ -1,2 +1,2 @@
 # painBitProj
-Arduino code being created for the painBit watched being created to store chronic pain data.
+Arduino code being created for the painBit watch being created to store chronic pain data.
