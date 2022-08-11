@@ -1,0 +1,44 @@
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <Adafruit_AM2320.h>
+
+
+  #define SCREEN_WIDTH 128 // setting the display width, in pixels
+  #define SCREEN_HEIGHT 32 // setting the display height, in pixels
+
+  #define OLED_RESET  4// Reset pin # (or -1 if sharing Arduino reset pin)
+  #define SCREEN_ADDRESS 0x3C //defining the address of the LCD
+  Adafruit_SSD1306 display(OLED_RESET);
+
+
+
+void setup() {
+  // put your setup code here, to run once:
+
+  Wire.begin(); //Starting the wire library 
+
+  
+  //display.begin(Adafruit_SSD1306, 0x3C) //initialize the LCD
+
+
+  //Will need to initialize the FSR here
+
+  delay(2000);
+
+  display.clearDisplay();
+  display.setTextColor(WHITE);
+  display.setTextSize(1);
+  display.setCursor(0,0);
+  display.print("PainBit");
+ 
+  
+
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+
+}
