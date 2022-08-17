@@ -1,44 +1,112 @@
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
-#include <Adafruit_AM2320.h>
+#include <EEPROM.h> //library that access' the EEPROM storage
 
 
-  #define SCREEN_WIDTH 128 // setting the display width, in pixels
-  #define SCREEN_HEIGHT 32 // setting the display height, in pixels
-
-  #define OLED_RESET  4// Reset pin # (or -1 if sharing Arduino reset pin)
-  #define SCREEN_ADDRESS 0x3C //defining the address of the LCD
-  Adafruit_SSD1306 display(OLED_RESET);
-
-
-
-void setup() {
-  // put your setup code here, to run once:
-
-  Wire.begin(); //Starting the wire library 
-
-  
-  //display.begin(Adafruit_SSD1306, 0x3C) //initialize the LCD
-
-
-  //Will need to initialize the FSR here
-
-  delay(2000);
-
-  display.clearDisplay();
-  display.setTextColor(WHITE);
-  display.setTextSize(1);
-  display.setCursor(0,0);
-  display.print("PainBit");
+int fsrPin = 0;     // the FSR and 10K pulldown are connected to a0
+int fsrReading;     // the analog reading from the FSR resistor divider
  
+void setup(void) {
+  // We'll send debugging information via the Serial monitor
+  Serial.begin(9600);   
+}
+ 
+void loop(void) {
   
+ //Start up
+ 
+  Serial.println("\n Welcome To PainBit!" );
+  delay(3000);
+
+  Serial.println("Let's begin registering your pain levels");
+  delay(3000);
+
+//Begin Callibration
+
+  Serial.println("Please press to register level 1 pain..." );
+  delay(4000);
+
+  fsrReading = analogRead(fsrPin);  
+  EEPROM.put(0, fsrReading); //write fsrReading value at byte 1
+  int level_one_pain;
+  EEPROM.get(0,level_one_pain);   //retrieve the pain value stored to verify it got stored 
+  Serial.print("Level one pain is registered as:" );
+  Serial.println(level_one_pain);
+  Serial.print("\n" );
+  
+  delay(3000);
+
+   
+  //Next pain level
+
+  int fsrReading2 = analogRead(fsrPin);  
+  
+  //Next pain level
+  Serial.println("Let's begin registering your pain level 2" );
+  delay(2000);
+  Serial.println("Please press button to register level 2 pain..." );
+  delay(4000);
+  
+  EEPROM.put(20, fsrReading2); //write fsrReading value at byte 1
+  int level_two_pain;
+  EEPROM.get(20,level_two_pain);   //retrieve the pain value stored to verify it got stored 
+  Serial.print("Level two pain is registered as:" );
+  Serial.println(level_two_pain);
+  Serial.print("\n" );
+
+  delay(3000);
 
 
-}
+  //Next pain level
+ 
+  Serial.println("Let's begin registering your pain level 3" );
+  delay(2000);
+  Serial.println("Please press button to register level 3 pain..." );
+  int fsrReading3 = analogRead(fsrPin); //read force at sensor
+  delay(4000);
+  
+  EEPROM.put(40, fsrReading3); //write fsrReading value at byte 1
+  int level_three_pain;
+  EEPROM.get(40,level_three_pain);   //retrieve the pain value stored to verify it got stored 
+  Serial.print("Level three pain is registered as:" );
+  Serial.println(level_three_pain);
+  Serial.print("\n" );
 
-void loop() {
-  // put your main code here, to run repeatedly:
+  delay(3000);
 
+  //Next pain level
+ 
+  Serial.println("Let's begin registering your pain level 4" );
+  delay(2000);
+  Serial.println("Please press button to register level 4 pain..." );
+  int fsrReading4 = analogRead(fsrPin); //read force at sensor
+  delay(4000);
+  
+  EEPROM.put(60, fsrReading4); //write fsrReading value at byte 1
+  int level_four_pain;
+  EEPROM.get(60,level_four_pain);   //retrieve the pain value stored to verify it got stored 
+  Serial.print("Level four pain is registered as:" );
+  Serial.println(level_four_pain);
+  Serial.print("\n" );
 
-}
+  delay(3000);
+
+  //Next pain level
+ 
+  Serial.println("Let's begin registering your pain level 5" );
+  delay(2000);
+  Serial.println("Please press button to register level 5 pain..." );
+  int fsrReading5 = analogRead(fsrPin); //read force at sensor
+  delay(4000);
+  
+  EEPROM.put(80, fsrReading5); //write fsrReading value at byte 1
+  int level_five_pain;
+  EEPROM.get(80,level_five_pain);   //retrieve the pain value stored to verify it got stored 
+  Serial.print("Level five pain is registered as:" );
+  Serial.println(level_five_pain);
+  Serial.print("\n" );
+
+  delay(3000);
+
+   Serial.println("Callibration Complete. Thank you! ");
+
+  delay(4000);
+} 
