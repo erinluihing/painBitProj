@@ -1,3 +1,4 @@
+
 #include <EEPROM.h> //library that access' the EEPROM storage
 
 
@@ -5,14 +6,14 @@ int fsrPin = 0;     // the FSR and 10K pulldown are connected to a0
 int fsrReading;     // the analog reading from the FSR resistor divider
  
 void setup(void) {
-  // We'll send debugging information via the Serial monitor
-  Serial.begin(9600);   
+
 }
  
 void loop(void) {
   
  //Start up
- 
+
+  delay(4000);
   Serial.println("\n Welcome To PainBit!" );
   delay(3000);
 
@@ -106,7 +107,29 @@ void loop(void) {
 
   delay(3000);
 
-   Serial.println("Callibration Complete. Thank you! ");
+  Serial.println("Callibration Complete. Thank you! \n");
 
   delay(4000);
+
+
+  Serial.println("PainBit is Ready!\n");
+  //Begin monitoring users pain
+
+  delay(3000);
+  
+    if (analogRead(fsrPin) < 1) {
+    Serial.println("No Pain \n");
+  } else if (analogRead(fsrPin) < level_two_pain ) {
+    Serial.println("Level 1 Pain Identified \n");
+  } else if (analogRead(fsrPin) < level_three_pain ) {
+    Serial.println("Level 2 Pain Identified \n");
+  } else if (analogRead(fsrPin) < level_four_pain ) {
+    Serial.println("Level 3 Pain Identified \n");
+  } else if (analogRead(fsrPin) < level_five_pain ) {
+    Serial.println("Level 4 Pain Identified \n");
+  } else {
+    Serial.println("Level 5 Pain Identified \n");
+  }
+
+
 } 
