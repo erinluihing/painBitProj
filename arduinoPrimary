@@ -1,135 +1,252 @@
 
 #include <EEPROM.h> //library that access' the EEPROM storage
 
+#include <SPI.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <Adafruit_AM2320.h>
+
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 32 // OLED display height, in pixels
+
+// Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
+// The pins for I2C are defined by the Wire-library. 
+// On an arduino UNO:       A4(SDA), A5(SCL)
+// On an arduino MEGA 2560: 20(SDA), 21(SCL)
+// On an arduino LEONARDO:   2(SDA),  3(SCL), ...
+#define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
+#define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
 
 int fsrPin = 0;     // the FSR and 10K pulldown are connected to a0
 int fsrReading;     // the analog reading from the FSR resistor divider
  
-void setup(void) {
+
+#define LOGO_HEIGHT   16
+#define LOGO_WIDTH    16
+static const unsigned char PROGMEM logo_bmp[] =
+{ 0b00000000, 0b11000000,
+  0b00000001, 0b11000000,
+  0b00000001, 0b11000000,
+  0b00000011, 0b11100000,
+  0b11110011, 0b11100000,
+  0b11111110, 0b11111000,
+  0b01111110, 0b11111111,
+  0b00110011, 0b10011111,
+  0b00011111, 0b11111100,
+  0b00001101, 0b01110000,
+  0b00011011, 0b10100000,
+  0b00111111, 0b11100000,
+  0b00111111, 0b11110000,
+  0b01111100, 0b11110000,
+  0b01110000, 0b01110000,
+  0b00000000, 0b00110000 };
+
+
+void setup() {
+  Serial.begin(9600);
+
+  // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
+  if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+    Serial.println(F("SSD1306 allocation failed"));
+    for(;;); // Don't proceed, loop forever
+
+      // We'll send debugging information via the Serial monitor
+  Serial.begin(9600);  
+  display.display();
+  delay(2000);
+  //clear buffer
+  display.clearDisplay(); 
+    
+  }
+
+  // Show initial display buffer contents on the screen --
+  // the library initializes this with an Adafruit splash screen.
+  display.display();
+  delay(2000); // Pause for 2 seconds
+
+  // Clear the buffer
+  display.clearDisplay();
+
+  // Draw a single pixel in white
+  display.drawPixel(10, 10, SSD1306_WHITE);
+
+  // Show the display buffer on the screen. You MUST call display() after
+  // drawing commands to make them visible on screen!
+  display.display();
+  delay(2000);
+  // display.display() is NOT necessary after every single drawing command,
+  // unless that's what you want...rather, you can batch up a bunch of
+  // drawing operations and then update the screen all at once by calling
+  // display.display(). These examples demonstrate both approaches...
+
+  testdrawstyles();    // Draw 'stylized' characters
 
 }
- 
-void loop(void) {
+
+
+
+void loop() {
+}
   
+void testdrawstyles(void) {
+  display.clearDisplay();
+
+  display.setTextSize(1.7);             // Normal 1:1 pixel scale
+  display.setTextColor(SSD1306_WHITE);        // Draw white text
+  display.setCursor(20,10);             // Start at centre
+  display.println(F("Hello, new user!"));
+
+
+  display.display();
+  delay(2000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
+
+  //Focusing on PainBit
+
+
+   
  //Start up
 
-  delay(4000);
-  Serial.println("\n Welcome To PainBit!" );
-  delay(3000);
+  delay(2000);
+  display.setCursor(20,10);             // Start at centre
+  display.println("\n Welcome To PainBit!" ); 
+  display.display(); //Welcome text displayed on LCD
+  delay(2000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
 
-  Serial.println("Let's begin registering your pain levels");
-  delay(3000);
+  display.setTextSize(1.6);             // Normal 1:1 pixel scale
+  display.setCursor(0,0);             // Start at top left corner
+  display.println("Let's begin" ); 
+  display.println("registering" ); 
+  display.println("your pain levels" ); 
+  display.display(); //Registeration text displayed on LCD
+  delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
+
 
 //Begin Callibration
 
-  Serial.println("Please press to register level 1 pain..." );
-  delay(4000);
+  //Callibration for level 1 pain
 
+  display.setTextSize(1.6);             // Normal 1:1 pixel scale
+  display.setCursor(0,0);             // Start at top left corner
+  display.println("Please press" ); 
+  display.println("to register" ); 
+  display.println("level 1 pain..." ); 
+  display.display(); //Registeration text displayed on LCD
+  delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
+  
   fsrReading = analogRead(fsrPin);  
   EEPROM.put(0, fsrReading); //write fsrReading value at byte 1
   int level_one_pain;
   EEPROM.get(0,level_one_pain);   //retrieve the pain value stored to verify it got stored 
-  Serial.print("Level one pain is registered as:" );
-  Serial.println(level_one_pain);
-  Serial.print("\n" );
-  
-  delay(3000);
-
-   
-  //Next pain level
-
-  int fsrReading2 = analogRead(fsrPin);  
-  
-  //Next pain level
-  Serial.println("Let's begin registering your pain level 2" );
-  delay(2000);
-  Serial.println("Please press button to register level 2 pain..." );
+  display.setCursor(0,0);   
+  display.println("Level one pain" ); 
+  display.println("registered as: " ); 
+  display.println(level_one_pain);
+  display.display(); //Registeration text displayed on LCD
   delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
   
+  delay(2000);
+
+  //Callibration for level 2 pain
+
+  
+  display.setTextSize(1.6);             // Normal 1:1 pixel scale
+  display.setCursor(0,0);             // Start at top left corner
+  display.println("Please press" ); 
+  display.println("to register" ); 
+  display.println("level 2 pain..." ); 
+  display.display(); //Registeration text displayed on LCD
+  delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
+  
+  int fsrReading2 = analogRead(fsrPin);    
   EEPROM.put(20, fsrReading2); //write fsrReading value at byte 1
   int level_two_pain;
   EEPROM.get(20,level_two_pain);   //retrieve the pain value stored to verify it got stored 
-  Serial.print("Level two pain is registered as:" );
-  Serial.println(level_two_pain);
-  Serial.print("\n" );
-
-  delay(3000);
-
-
-  //Next pain level
- 
-  Serial.println("Let's begin registering your pain level 3" );
-  delay(2000);
-  Serial.println("Please press button to register level 3 pain..." );
-  int fsrReading3 = analogRead(fsrPin); //read force at sensor
+  display.setCursor(0,0);   
+  display.println("Level two pain" ); 
+  display.println("registered as: " ); 
+  display.println(level_two_pain);
+  display.display(); //Registeration text displayed on LCD
   delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
+  //Callibration for level 3 pain
+
+
+  display.setTextSize(1.6);             // Normal 1:1 pixel scale
+  display.setCursor(0,0);             // Start at top left corner
+  display.println("Please press" ); 
+  display.println("to register" ); 
+  display.println("level 3 pain..." ); 
+  display.display(); //Registeration text displayed on LCD
+  delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
   
+  int fsrReading3 = analogRead(fsrPin);    
   EEPROM.put(40, fsrReading3); //write fsrReading value at byte 1
   int level_three_pain;
-  EEPROM.get(40,level_three_pain);   //retrieve the pain value stored to verify it got stored 
-  Serial.print("Level three pain is registered as:" );
-  Serial.println(level_three_pain);
-  Serial.print("\n" );
-
-  delay(3000);
-
-  //Next pain level
- 
-  Serial.println("Let's begin registering your pain level 4" );
-  delay(2000);
-  Serial.println("Please press button to register level 4 pain..." );
-  int fsrReading4 = analogRead(fsrPin); //read force at sensor
+  EEPROM.get(40,level_three_pain);    //retrieve the pain value stored to verify it got stored 
+  display.setCursor(0,0);   
+  display.println("Level three pain" ); 
+  display.println("registered as: " ); 
+  display.println(level_three_pain);
+  display.display(); //Registeration text displayed on LCD
   delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
+
+
+ //Callibration for level 4 pain
+
+
+  display.setTextSize(1.6);             // Normal 1:1 pixel scale
+  display.setCursor(0,0);             // Start at top left corner
+  display.println("Please press" ); 
+  display.println("to register" ); 
+  display.println("level 4 pain..." ); 
+  display.display(); //Registeration text displayed on LCD
+  delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
   
+  int fsrReading4 = analogRead(fsrPin);    
   EEPROM.put(60, fsrReading4); //write fsrReading value at byte 1
   int level_four_pain;
-  EEPROM.get(60,level_four_pain);   //retrieve the pain value stored to verify it got stored 
-  Serial.print("Level four pain is registered as:" );
-  Serial.println(level_four_pain);
-  Serial.print("\n" );
-
-  delay(3000);
-
-  //Next pain level
- 
-  Serial.println("Let's begin registering your pain level 5" );
-  delay(2000);
-  Serial.println("Please press button to register level 5 pain..." );
-  int fsrReading5 = analogRead(fsrPin); //read force at sensor
+  EEPROM.get(60,level_four_pain);     //retrieve the pain value stored to verify it got stored 
+  display.setCursor(0,0);   
+  display.println("Level four pain" ); 
+  display.println("registered as: " ); 
+  display.println(level_four_pain);
+  display.display(); //Registeration text displayed on LCD
   delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
+
+
   
-  EEPROM.put(80, fsrReading5); //write fsrReading value at byte 1
-  int level_five_pain;
-  EEPROM.get(80,level_five_pain);   //retrieve the pain value stored to verify it got stored 
-  Serial.print("Level five pain is registered as:" );
-  Serial.println(level_five_pain);
-  Serial.print("\n" );
-
-  delay(3000);
-
-  Serial.println("Callibration Complete. Thank you! \n");
-
-  delay(4000);
-
-
-  Serial.println("PainBit is Ready!\n");
-  //Begin monitoring users pain
-
-  delay(3000);
-  
-    if (analogRead(fsrPin) < 1) {
-    Serial.println("No Pain \n");
-  } else if (analogRead(fsrPin) < level_two_pain ) {
-    Serial.println("Level 1 Pain Identified \n");
-  } else if (analogRead(fsrPin) < level_three_pain ) {
-    Serial.println("Level 2 Pain Identified \n");
-  } else if (analogRead(fsrPin) < level_four_pain ) {
-    Serial.println("Level 3 Pain Identified \n");
-  } else if (analogRead(fsrPin) < level_five_pain ) {
-    Serial.println("Level 4 Pain Identified \n");
-  } else {
-    Serial.println("Level 5 Pain Identified \n");
-  }
-
-
-} 
+}
