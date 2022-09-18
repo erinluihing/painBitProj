@@ -246,6 +246,173 @@ void testdrawstyles(void) {
   display.clearDisplay(); //clear buffer
   display.display(); //display cleared screen
 
+ //Callibration for level 5 pain
+
+
+  display.setTextSize(1.6);             // Normal 1:1 pixel scale
+  display.setCursor(0,0);             // Start at top left corner
+  display.println("Please press" ); 
+  display.println("to register" ); 
+  display.println("level 5 pain..." ); 
+  display.display(); //Registeration text displayed on LCD
+  delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
+  
+  int fsrReading5 = analogRead(fsrPin); //read force at sensor   
+  EEPROM.put(60, fsrReading5); //write fsrReading value at byte 1
+  int level_five_pain;
+  EEPROM.get(60,level_four_pain);     //retrieve the pain value stored to verify it got stored 
+  display.setCursor(0,0);   
+  display.println("Level five pain" ); 
+  display.println("registered as: " ); 
+  display.println(level_five_pain);
+  display.display(); //Registeration text displayed on LCD
+  delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
+
+
+//Callibration for level 6 pain
+
+
+  display.setTextSize(1.6);             // Normal 1:1 pixel scale
+  display.setCursor(0,0);             // Start at top left corner
+  display.println("Please press" ); 
+  display.println("to register" ); 
+  display.println("level 6 pain..." ); 
+  display.display(); //Registeration text displayed on LCD
+  delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
+  
+  int fsrReading6 = analogRead(fsrPin); //read force at sensor   
+  EEPROM.put(60, fsrReading6); //write fsrReading value at byte 1
+  int level_six_pain;
+  EEPROM.get(60,level_six_pain);     //retrieve the pain value stored to verify it got stored 
+  display.setCursor(0,0);   
+  display.println("Level six pain" ); 
+  display.println("registered as: " ); 
+  display.println(level_six_pain);
+  display.display(); //Registeration text displayed on LCD
+  delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
+
+//Callibration for level 7 pain
+
+
+  display.setTextSize(1.6);             // Normal 1:1 pixel scale
+  display.setCursor(0,0);             // Start at top left corner
+  display.println("Please press" ); 
+  display.println("to register" ); 
+  display.println("level 7 pain..." ); 
+  display.display(); //Registeration text displayed on LCD
+  delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
+  
+  int fsrReading7 = analogRead(fsrPin); //read force at sensor   
+  EEPROM.put(60, fsrReading7); //write fsrReading value at byte 1
+  int level_seven_pain;
+  EEPROM.get(60,level_seven_pain);     //retrieve the pain value stored to verify it got stored 
+  display.setCursor(0,0);   
+  display.println("Level seven pain" ); 
+  display.println("registered as: " ); 
+  display.println(level_seven_pain);
+  display.display(); //Registeration text displayed on LCD
+  delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
+
+//Callibration for level 8 pain
+
+
+  display.setTextSize(1.6);             // Normal 1:1 pixel scale
+  display.setCursor(0,0);             // Start at top left corner
+  display.println("Please press" ); 
+  display.println("to register" ); 
+  display.println("level 8 pain..." ); 
+  display.display(); //Registeration text displayed on LCD
+  delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
+  
+  int fsrReading8 = analogRead(fsrPin); //read force at sensor   
+  EEPROM.put(60, fsrReading8); //write fsrReading value at byte 1
+  int level_eight_pain;
+  EEPROM.get(60,level_eight_pain);     //retrieve the pain value stored to verify it got stored 
+  display.setCursor(0,0);   
+  display.println("Level eight pain" ); 
+  display.println("registered as: " ); 
+  display.println(level_eight_pain);
+  display.display(); //Registeration text displayed on LCD
+  delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
+
+//Callibration for level 9 pain
+
+
+  display.setTextSize(1.6);             // Normal 1:1 pixel scale
+  display.setCursor(0,0);             // Start at top left corner
+  display.println("Please press" ); 
+  display.println("to register" ); 
+  display.println("level 9 pain..." ); 
+  display.display(); //Registeration text displayed on LCD
+  delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
+  
+  int fsrReading9 = analogRead(fsrPin); //read force at sensor   
+  EEPROM.put(60, fsrReading9); //write fsrReading value at byte 1
+  int level_nine_pain;
+  EEPROM.get(60,level_nine_pain);     //retrieve the pain value stored to verify it got stored 
+  display.setCursor(0,0);   
+  display.println("Level nine pain" ); 
+  display.println("registered as: " ); 
+  display.println(level_nine_pain);
+  display.display(); //Registeration text displayed on LCD
+  delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
+
+//Callibration for level 10 pain
+
+
+  display.setTextSize(1.6);             // Normal 1:1 pixel scale
+  display.setCursor(0,0);             // Start at top left corner
+  display.println("Please press" ); 
+  display.println("to register" ); 
+  display.println("level 10 pain..." ); 
+  display.display(); //Registeration text displayed on LCD
+  delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
+
+  
+  int fsrReading10 = analogRead(fsrPin); //read force at sensor   
+  EEPROM.put(60, fsrReading10); //write fsrReading value at byte 1
+  int level_ten_pain;
+  EEPROM.get(60,level_ten_pain);     //retrieve the pain value stored to verify it got stored 
+  display.setCursor(0,0);   
+  display.println("Level ten pain" ); 
+  display.println("registered as: " ); 
+  display.println(level_ten_pain);
+  display.display(); //Registeration text displayed on LCD
+  delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
 
 
   
