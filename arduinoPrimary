@@ -1,4 +1,5 @@
 
+
 #include <EEPROM.h> //library that access' the EEPROM storage
 
 #include <SPI.h>
@@ -82,16 +83,19 @@ void setup() {
   // drawing operations and then update the screen all at once by calling
   // display.display(). These examples demonstrate both approaches...
 
-  testdrawstyles();    // Draw 'stylized' characters
+  testpainbit();    // Execute Pain Level Registering
 
 }
 
 
 
 void loop() {
+
+
+
 }
   
-void testdrawstyles(void) {
+void testpainbit(void) {
   display.clearDisplay();
 
   display.setTextSize(1.7);             // Normal 1:1 pixel scale
@@ -104,9 +108,6 @@ void testdrawstyles(void) {
   delay(2000);
   display.clearDisplay(); //clear buffer
   display.display(); //display cleared screen
-
-
-  //Focusing on PainBit
 
 
    
@@ -414,6 +415,126 @@ void testdrawstyles(void) {
   display.clearDisplay(); //clear buffer
   display.display(); //display cleared screen
 
+  display.setCursor(0,0);   
+  display.println("Callibration Complete" ); 
+  display.println("Thank you!" ); 
+  display.display(); //Registeration text displayed on LCD
+  delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
 
+
+
+  display.setCursor(0,0);   
+  display.println("PainBit Ready!" ); 
+  display.display(); //Registeration text displayed on LCD
+  delay(4000);
+  display.clearDisplay(); //clear buffer
+  display.display(); //display cleared screen
   
+  //Begin monitoring users pain
+
+
+  while(fsrReading10 > 0) {
+   int current_pain = analogRead(fsrPin);
+   if (current_pain < 1) {
+    display.setCursor(0,0);   
+    display.println("No pain \n" ); 
+    display.display(); //Registeration text displayed on LCD
+    delay(4000);
+    display.clearDisplay(); //clear buffer
+    display.display(); //display cleared screen
+    
+  } else if (current_pain < level_two_pain ) {
+    display.setCursor(0,0);   
+    display.println("Level 1 Pain Identified \n" ); 
+    display.display(); //Registeration text displayed on LCD
+    delay(4000);
+    display.clearDisplay(); //clear buffer
+    display.display(); //display cleared screen
+    
+  } else if (current_pain < level_three_pain ) {
+    display.setCursor(0,0);   
+    display.println("Level 2 Pain Identified \n" ); 
+    display.display(); //Registeration text displayed on LCD
+    delay(4000);
+    display.clearDisplay(); //clear buffer
+    display.display(); //display cleared screen
+    
+  } else if (current_pain < level_four_pain ) {
+    display.setCursor(0,0);   
+    display.println("Level 3 Pain Identified \n" ); 
+    display.display(); //Registeration text displayed on LCD
+    delay(4000);
+    display.clearDisplay(); //clear buffer
+    display.display(); //display cleared screen
+    
+  } else if (current_pain < level_five_pain ) {
+    display.setCursor(0,0);   
+    display.println("Level 4 Pain Identified \n" ); 
+    display.display(); //Registeration text displayed on LCD
+    delay(4000);
+    display.clearDisplay(); //clear buffer
+    display.display(); //display cleared screen
+
+
+    
+  } else if (current_pain < level_six_pain ) {
+    display.setCursor(0,0);   
+    display.println("Level 5 Pain Identified \n" ); 
+    display.display(); //Registeration text displayed on LCD
+    delay(4000);
+    display.clearDisplay(); //clear buffer
+    display.display(); //display cleared screen
+    
+    
+
+    
+  } else if (current_pain < level_seven_pain ) {
+    display.setCursor(0,0);   
+    display.println("Level 6 Pain Identified \n" ); 
+    display.display(); //Registeration text displayed on LCD
+    delay(4000);
+    display.clearDisplay(); //clear buffer
+    display.display(); //display cleared screen
+    
+    
+
+    
+  } else if (current_pain < level_eight_pain ) {
+    display.setCursor(0,0);   
+    display.println("Level 7 Pain Identified \n" ); 
+    display.display(); //Registeration text displayed on LCD
+    delay(4000);
+    display.clearDisplay(); //clear buffer
+    display.display(); //display cleared screen
+    
+    
+    
+  } else if (current_pain < level_nine_pain ) {
+    display.setCursor(0,0);   
+    display.println("Level 8 Pain Identified \n" ); 
+    display.display(); //Registeration text displayed on LCD
+    delay(4000);
+    display.clearDisplay(); //clear buffer
+    display.display(); //display cleared screen
+    
+     
+  } else if (current_pain < level_ten_pain ) {
+    display.setCursor(0,0);   
+    display.println("Level 9 Pain Identified \n" ); 
+    display.display(); //Registeration text displayed on LCD
+    delay(4000);
+    display.clearDisplay(); //clear buffer
+    display.display(); //display cleared screen
+    
+    
+    
+    
+  } else {
+    display.println("Level 10 Pain Identified \n");
+  }
+
+ }
+ 
 }
