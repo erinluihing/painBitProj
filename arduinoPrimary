@@ -1,12 +1,17 @@
 
 
-#include <EEPROM.h> //library that access' the EEPROM storage
+#include <EEPROM.h> //library that access' the EEPROM storage, where painbit stores callibrated and recorded pain levels
 
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <Adafruit_AM2320.h>
+
+#include <TimeLib.h> //Module used to keep track of date and time
+
+#define TIME_HEADER  "T"   // Header tag for serial time sync message
+#define TIME_REQUEST  7    // ASCII bell character requests a time sync message 
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
@@ -48,7 +53,14 @@ static const unsigned char PROGMEM logo_bmp[] =
 
 void setup() {
   Serial.begin(9600);
-
+/*
+  //Setting up the time and date
+  while (!Serial) ; 
+  pinMode(13, OUTPUT);
+  setSyncProvider( requestSync);  //set function to call when sync required
+  Serial.println("Waiting for sync message");
+*/
+  
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
     Serial.println(F("SSD1306 allocation failed"));
@@ -91,10 +103,106 @@ void setup() {
 
 void loop() {
 
-
+/*
+//loop used for tracking time
+  if (Serial.available()) {
+    processSyncMessage();
+  }
+  if (timeStatus()!= timeNotSet) {
+    digitalClockDisplay();  
+  }
+  if (timeStatus() == timeSet) {
+    digitalWrite(13, HIGH); // LED on if synced
+  } else {
+    digitalWrite(13, LOW);  // LED off if needs refresh
+  }
+  delay(1000);
+*/
 
 }
+
+
+
+//time tracking functions 
+//From: Time  Serial Arduino example code
+
+/*
+
+void digitalClockDisplay(){
+  // digital clock display of the time
+  Serial.print(hour());
+  printDigits(minute());
+  printDigits(second());
+  Serial.print(" ");
+  Serial.print(day());
+  Serial.print(" ");
+  Serial.print(month());
+  Serial.print(" ");
+  Serial.print(year()); 
+  Serial.println(); 
+}
+
+void printDigits(int digits){
+  // utility function for digital clock display: prints preceding colon and leading 0
+  Serial.print(":");
+  if(digits < 10)
+    Serial.print('0');
+  Serial.print(digits);
+}
+
+
+void processSyncMessage() {
+  unsigned long pctime;
+  const unsigned long DEFAULT_TIME = 1357041600; // Jan 1 2013 default time
+
+  if(Serial.find(TIME_HEADER)) {
+     pctime = Serial.parseInt();
+     if( pctime >= DEFAULT_TIME) { // check the integer is a valid time (greater than Jan 1 2013)
+       setTime(pctime); // Sync Arduino clock to the time received on the serial port
+     }
+  }
+}
+
+time_t requestSync()
+{
+  Serial.write(TIME_REQUEST);  
+  return 0; // the time will be sent later in response to serial mesg
+}
+*/
+
+
+//Record Pain levels to eeprom
+
+void writeStringToEEPROM(int addrOffset, const String &strToWrite)
+{
+  byte len = strToWrite.length();
+  EEPROM.write(addrOffset, len);
+  for (int i = 0; i < len; i++)
+  {
+    EEPROM.write(addrOffset + 1 + i, strToWrite[i]);
+  }
+}
+
+String readStringFromEEPROM(int addrOffset)
+{
+  int newStrLen = EEPROM.read(addrOffset);
+  char data[newStrLen + 1];
+  for (int i = 0; i < newStrLen; i++)
+  {
+    data[i] = EEPROM.read(addrOffset + 1 + i);
+  }
+  data[newStrLen] = '\0'; // !!! NOTE !!! Remove the space between the slash "/" and "0" (I've added a space because otherwise there is a display bug)
+  return String(data);
+
+
   
+}
+
+
+//PainBit Functions
+
+
+
 void testpainbit(void) {
   display.clearDisplay();
 
@@ -152,7 +260,7 @@ void testpainbit(void) {
   EEPROM.put(0, fsrReading); //write fsrReading value at byte 1
   int level_one_pain;
   EEPROM.get(0,level_one_pain);   //retrieve the pain value stored to verify it got stored 
-  display.setCursor(0,0);   
+  display.setCursor(0,0);   //prepare where to write on display 
   display.println("Level one pain" ); 
   display.println("registered as: " ); 
   display.println(level_one_pain);
@@ -262,9 +370,9 @@ void testpainbit(void) {
 
   
   int fsrReading5 = analogRead(fsrPin); //read force at sensor   
-  EEPROM.put(60, fsrReading5); //write fsrReading value at byte 1
+  EEPROM.put(70, fsrReading5); //write fsrReading value at byte 1
   int level_five_pain;
-  EEPROM.get(60,level_four_pain);     //retrieve the pain value stored to verify it got stored 
+  EEPROM.get(70,level_four_pain);     //retrieve the pain value stored to verify it got stored 
   display.setCursor(0,0);   
   display.println("Level five pain" ); 
   display.println("registered as: " ); 
@@ -291,9 +399,9 @@ void testpainbit(void) {
 
   
   int fsrReading6 = analogRead(fsrPin); //read force at sensor   
-  EEPROM.put(60, fsrReading6); //write fsrReading value at byte 1
+  EEPROM.put(80, fsrReading6); //write fsrReading value at byte 1
   int level_six_pain;
-  EEPROM.get(60,level_six_pain);     //retrieve the pain value stored to verify it got stored 
+  EEPROM.get(80,level_six_pain);     //retrieve the pain value stored to verify it got stored 
   display.setCursor(0,0);   
   display.println("Level six pain" ); 
   display.println("registered as: " ); 
@@ -319,9 +427,9 @@ void testpainbit(void) {
 
   
   int fsrReading7 = analogRead(fsrPin); //read force at sensor   
-  EEPROM.put(60, fsrReading7); //write fsrReading value at byte 1
+  EEPROM.put(90, fsrReading7); //write fsrReading value at byte 1
   int level_seven_pain;
-  EEPROM.get(60,level_seven_pain);     //retrieve the pain value stored to verify it got stored 
+  EEPROM.get(90,level_seven_pain);     //retrieve the pain value stored to verify it got stored 
   display.setCursor(0,0);   
   display.println("Level seven pain" ); 
   display.println("registered as: " ); 
@@ -347,9 +455,9 @@ void testpainbit(void) {
 
   
   int fsrReading8 = analogRead(fsrPin); //read force at sensor   
-  EEPROM.put(60, fsrReading8); //write fsrReading value at byte 1
+  EEPROM.put(100, fsrReading8); //write fsrReading value at byte 1
   int level_eight_pain;
-  EEPROM.get(60,level_eight_pain);     //retrieve the pain value stored to verify it got stored 
+  EEPROM.get(100,level_eight_pain);     //retrieve the pain value stored to verify it got stored 
   display.setCursor(0,0);   
   display.println("Level eight pain" ); 
   display.println("registered as: " ); 
@@ -375,9 +483,9 @@ void testpainbit(void) {
 
   
   int fsrReading9 = analogRead(fsrPin); //read force at sensor   
-  EEPROM.put(60, fsrReading9); //write fsrReading value at byte 1
+  EEPROM.put(110, fsrReading9); //write fsrReading value at byte 1
   int level_nine_pain;
-  EEPROM.get(60,level_nine_pain);     //retrieve the pain value stored to verify it got stored 
+  EEPROM.get(110,level_nine_pain);     //retrieve the pain value stored to verify it got stored 
   display.setCursor(0,0);   
   display.println("Level nine pain" ); 
   display.println("registered as: " ); 
@@ -403,9 +511,9 @@ void testpainbit(void) {
 
   
   int fsrReading10 = analogRead(fsrPin); //read force at sensor   
-  EEPROM.put(60, fsrReading10); //write fsrReading value at byte 1
+  EEPROM.put(120, fsrReading10); //write fsrReading value at byte 1
   int level_ten_pain;
-  EEPROM.get(60,level_ten_pain);     //retrieve the pain value stored to verify it got stored 
+  EEPROM.get(120,level_ten_pain);     //retrieve the pain value stored to verify it got stored 
   display.setCursor(0,0);   
   display.println("Level ten pain" ); 
   display.println("registered as: " ); 
@@ -431,15 +539,22 @@ void testpainbit(void) {
   delay(4000);
   display.clearDisplay(); //clear buffer
   display.display(); //display cleared screen
+
+
   
   //Begin monitoring users pain
 
 
   while(fsrReading10 > 0) {
+
+   int current_eeprom_addr = 130;
    int current_pain = analogRead(fsrPin);
-   if (current_pain < 1) {
+   if (current_pain < level_one_pain) {
     display.setCursor(0,0);   
     display.println("No pain \n" ); 
+    writeStringToEEPROM(130, "No pain");
+    readStringFromEEPROM(130);
+    Serial.println(readStringFromEEPROM(130));
     display.display(); //Registeration text displayed on LCD
     delay(4000);
     display.clearDisplay(); //clear buffer
@@ -530,10 +645,10 @@ void testpainbit(void) {
     
     
     
-    
   } else {
-    display.println("Level 10 Pain Identified \n");
+    display.println("Level 10 Pain Identified ");
   }
+
 
  }
  
