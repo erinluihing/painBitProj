@@ -372,7 +372,7 @@ void testpainbit(void) {
   int fsrReading5 = analogRead(fsrPin); //read force at sensor   
   EEPROM.put(70, fsrReading5); //write fsrReading value at byte 1
   int level_five_pain;
-  EEPROM.get(70,level_four_pain);     //retrieve the pain value stored to verify it got stored 
+  EEPROM.get(70,level_five_pain);     //retrieve the pain value stored to verify it got stored 
   display.setCursor(0,0);   
   display.println("Level five pain" ); 
   display.println("registered as: " ); 
@@ -547,26 +547,31 @@ void testpainbit(void) {
 
   while(fsrReading10 > 0) {
 
-   int current_eeprom_addr = 130;
+   int current_eeprom_addr = 130; //move above while loop?
    int current_pain = analogRead(fsrPin);
    if (current_pain < level_one_pain) {
     display.setCursor(0,0);   
     display.println("No pain \n" ); 
-    writeStringToEEPROM(130, "No pain");
-    readStringFromEEPROM(130);
-    Serial.println(readStringFromEEPROM(130));
+    writeStringToEEPROM(current_eeprom_addr, "No pain");
+    readStringFromEEPROM(current_eeprom_addr);
+    Serial.println(readStringFromEEPROM(current_eeprom_addr));
     display.display(); //Registeration text displayed on LCD
     delay(4000);
     display.clearDisplay(); //clear buffer
     display.display(); //display cleared screen
+    current_eeprom_addr = current_eeprom_addr + 50;
     
   } else if (current_pain < level_two_pain ) {
     display.setCursor(0,0);   
     display.println("Level 1 Pain Identified \n" ); 
+    writeStringToEEPROM(current_eeprom_addr, "Level 1");
+    readStringFromEEPROM(current_eeprom_addr);
+    Serial.println(readStringFromEEPROM(current_eeprom_addr));
     display.display(); //Registeration text displayed on LCD
     delay(4000);
     display.clearDisplay(); //clear buffer
     display.display(); //display cleared screen
+    current_eeprom_addr = current_eeprom_addr + 50;
     
   } else if (current_pain < level_three_pain ) {
     display.setCursor(0,0);   
