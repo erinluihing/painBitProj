@@ -53,13 +53,7 @@ static const unsigned char PROGMEM logo_bmp[] =
 
 void setup() {
   Serial.begin(9600);
-/*
-  //Setting up the time and date
-  while (!Serial) ; 
-  pinMode(13, OUTPUT);
-  setSyncProvider( requestSync);  //set function to call when sync required
-  Serial.println("Waiting for sync message");
-*/
+
   
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
@@ -103,72 +97,12 @@ void setup() {
 
 void loop() {
 
-/*
-//loop used for tracking time
-  if (Serial.available()) {
-    processSyncMessage();
-  }
-  if (timeStatus()!= timeNotSet) {
-    digitalClockDisplay();  
-  }
-  if (timeStatus() == timeSet) {
-    digitalWrite(13, HIGH); // LED on if synced
-  } else {
-    digitalWrite(13, LOW);  // LED off if needs refresh
-  }
-  delay(1000);
-*/
+
 
 }
 
 
 
-//time tracking functions 
-//From: Time  Serial Arduino example code
-
-/*
-
-void digitalClockDisplay(){
-  // digital clock display of the time
-  Serial.print(hour());
-  printDigits(minute());
-  printDigits(second());
-  Serial.print(" ");
-  Serial.print(day());
-  Serial.print(" ");
-  Serial.print(month());
-  Serial.print(" ");
-  Serial.print(year()); 
-  Serial.println(); 
-}
-
-void printDigits(int digits){
-  // utility function for digital clock display: prints preceding colon and leading 0
-  Serial.print(":");
-  if(digits < 10)
-    Serial.print('0');
-  Serial.print(digits);
-}
-
-
-void processSyncMessage() {
-  unsigned long pctime;
-  const unsigned long DEFAULT_TIME = 1357041600; // Jan 1 2013 default time
-
-  if(Serial.find(TIME_HEADER)) {
-     pctime = Serial.parseInt();
-     if( pctime >= DEFAULT_TIME) { // check the integer is a valid time (greater than Jan 1 2013)
-       setTime(pctime); // Sync Arduino clock to the time received on the serial port
-     }
-  }
-}
-
-time_t requestSync()
-{
-  Serial.write(TIME_REQUEST);  
-  return 0; // the time will be sent later in response to serial mesg
-}
-*/
 
 
 //Record Pain levels to eeprom
@@ -176,6 +110,9 @@ time_t requestSync()
 void writeStringToEEPROM(int addrOffset, const String &strToWrite)
 {
   byte len = strToWrite.length();
+  Serial.println("string len:");
+  Serial.println(len); //debugging 
+  
   EEPROM.write(addrOffset, len);
   for (int i = 0; i < len; i++)
   {
@@ -186,17 +123,23 @@ void writeStringToEEPROM(int addrOffset, const String &strToWrite)
 String readStringFromEEPROM(int addrOffset)
 {
   int newStrLen = EEPROM.read(addrOffset);
+
+  Serial.println(addrOffset); //added for debugging
+  
   char data[newStrLen + 1];
   for (int i = 0; i < newStrLen; i++)
   {
     data[i] = EEPROM.read(addrOffset + 1 + i);
+    Serial.println(data[i]);
   }
-  data[newStrLen] = '\0'; // !!! NOTE !!! Remove the space between the slash "/" and "0" (I've added a space because otherwise there is a display bug)
+  data[newStrLen] = '\0'; 
   return String(data);
 
 
   
 }
+
+
 
 
 //PainBit Functions
@@ -247,7 +190,7 @@ void testpainbit(void) {
 
   display.setTextSize(1.6);             // Normal 1:1 pixel scale
   display.setCursor(0,0);             // Start at top left corner
-  display.println("Please press" ); 
+  display.println("Please hold" ); 
   display.println("to register" ); 
   display.println("level 1 pain..." ); 
   display.display(); //Registeration text displayed on LCD
@@ -277,7 +220,7 @@ void testpainbit(void) {
   
   display.setTextSize(1.6);             // Normal 1:1 pixel scale
   display.setCursor(0,0);             // Start at top left corner
-  display.println("Please press" ); 
+  display.println("Please hold" ); 
   display.println("to register" ); 
   display.println("level 2 pain..." ); 
   display.display(); //Registeration text displayed on LCD
@@ -333,7 +276,7 @@ void testpainbit(void) {
 
   display.setTextSize(1.6);             // Normal 1:1 pixel scale
   display.setCursor(0,0);             // Start at top left corner
-  display.println("Please press" ); 
+  display.println("Please hold" ); 
   display.println("to register" ); 
   display.println("level 4 pain..." ); 
   display.display(); //Registeration text displayed on LCD
@@ -360,7 +303,7 @@ void testpainbit(void) {
 
   display.setTextSize(1.6);             // Normal 1:1 pixel scale
   display.setCursor(0,0);             // Start at top left corner
-  display.println("Please press" ); 
+  display.println("Please hold" ); 
   display.println("to register" ); 
   display.println("level 5 pain..." ); 
   display.display(); //Registeration text displayed on LCD
@@ -417,7 +360,7 @@ void testpainbit(void) {
 
   display.setTextSize(1.6);             // Normal 1:1 pixel scale
   display.setCursor(0,0);             // Start at top left corner
-  display.println("Please press" ); 
+  display.println("Please hold" ); 
   display.println("to register" ); 
   display.println("level 7 pain..." ); 
   display.display(); //Registeration text displayed on LCD
@@ -445,7 +388,7 @@ void testpainbit(void) {
 
   display.setTextSize(1.6);             // Normal 1:1 pixel scale
   display.setCursor(0,0);             // Start at top left corner
-  display.println("Please press" ); 
+  display.println("Please hold" ); 
   display.println("to register" ); 
   display.println("level 8 pain..." ); 
   display.display(); //Registeration text displayed on LCD
@@ -473,7 +416,7 @@ void testpainbit(void) {
 
   display.setTextSize(1.6);             // Normal 1:1 pixel scale
   display.setCursor(0,0);             // Start at top left corner
-  display.println("Please press" ); 
+  display.println("Please hold" ); 
   display.println("to register" ); 
   display.println("level 9 pain..." ); 
   display.display(); //Registeration text displayed on LCD
@@ -501,7 +444,7 @@ void testpainbit(void) {
 
   display.setTextSize(1.6);             // Normal 1:1 pixel scale
   display.setCursor(0,0);             // Start at top left corner
-  display.println("Please press" ); 
+  display.println("Please hold" ); 
   display.println("to register" ); 
   display.println("level 10 pain..." ); 
   display.display(); //Registeration text displayed on LCD
@@ -541,71 +484,114 @@ void testpainbit(void) {
   display.display(); //display cleared screen
 
 
+
+
   
   //Begin monitoring users pain
 
+  int current_eeprom_addr = 130;
+  int last_eeprom_addr;
 
   while(fsrReading10 > 0) {
 
-   int current_eeprom_addr = 130; //move above while loop?
+    
+
    int current_pain = analogRead(fsrPin);
+   last_eeprom_addr = current_eeprom_addr;
+   
    if (current_pain < level_one_pain) {
     display.setCursor(0,0);   
-    display.println("No pain \n" ); 
-    writeStringToEEPROM(current_eeprom_addr, "No pain");
-    readStringFromEEPROM(current_eeprom_addr);
-    Serial.println(readStringFromEEPROM(current_eeprom_addr));
-    display.display(); //Registeration text displayed on LCD
+    display.println("No pain \n"); 
+    display.display(); //display cleared screen
     delay(4000);
     display.clearDisplay(); //clear buffer
     display.display(); //display cleared screen
-    current_eeprom_addr = current_eeprom_addr + 50;
+
     
   } else if (current_pain < level_two_pain ) {
     display.setCursor(0,0);   
     display.println("Level 1 Pain Identified \n" ); 
-    writeStringToEEPROM(current_eeprom_addr, "Level 1");
-    readStringFromEEPROM(current_eeprom_addr);
-    Serial.println(readStringFromEEPROM(current_eeprom_addr));
+
+
+    Serial.println(current_eeprom_addr);
+    writeStringToEEPROM(current_eeprom_addr, F("L1")); //Store a level 1 pain identified 
+
+    
+    
+    
+    Serial.println(readStringFromEEPROM(last_eeprom_addr)); 
     display.display(); //Registeration text displayed on LCD
     delay(4000);
     display.clearDisplay(); //clear buffer
     display.display(); //display cleared screen
-    current_eeprom_addr = current_eeprom_addr + 50;
+    current_eeprom_addr += 4;
+
     
   } else if (current_pain < level_three_pain ) {
     display.setCursor(0,0);   
     display.println("Level 2 Pain Identified \n" ); 
+    
+    last_eeprom_addr = current_eeprom_addr; 
+    Serial.println(current_eeprom_addr);
+
+    writeStringToEEPROM(current_eeprom_addr, F("L2"));
+    
+    Serial.println(readStringFromEEPROM(last_eeprom_addr));
     display.display(); //Registeration text displayed on LCD
     delay(4000);
     display.clearDisplay(); //clear buffer
     display.display(); //display cleared screen
+    current_eeprom_addr += 4;
     
   } else if (current_pain < level_four_pain ) {
     display.setCursor(0,0);   
     display.println("Level 3 Pain Identified \n" ); 
+
+    Serial.println(current_eeprom_addr);
+
+    writeStringToEEPROM(current_eeprom_addr, F("L3")); //Store a level 3 pain identified 
+    
+    Serial.println(readStringFromEEPROM(last_eeprom_addr));
     display.display(); //Registeration text displayed on LCD
     delay(4000);
     display.clearDisplay(); //clear buffer
     display.display(); //display cleared screen
+    current_eeprom_addr += 4;
     
   } else if (current_pain < level_five_pain ) {
     display.setCursor(0,0);   
     display.println("Level 4 Pain Identified \n" ); 
+    
+    Serial.println(current_eeprom_addr);
+
+    writeStringToEEPROM(current_eeprom_addr, F("L4")); //Store a level 4 pain identified 
+    
+    Serial.println(readStringFromEEPROM(last_eeprom_addr));
+    
     display.display(); //Registeration text displayed on LCD
     delay(4000);
     display.clearDisplay(); //clear buffer
     display.display(); //display cleared screen
+    current_eeprom_addr += 4;
 
 
     
   } else if (current_pain < level_six_pain ) {
     display.setCursor(0,0);   
     display.println("Level 5 Pain Identified \n" ); 
+
+    Serial.println(current_eeprom_addr);
+
+    writeStringToEEPROM(current_eeprom_addr, F("L5")); //Store a level 5 pain identified 
+    
+    Serial.println(readStringFromEEPROM(last_eeprom_addr));
+
+   
     display.display(); //Registeration text displayed on LCD
     delay(4000);
     display.clearDisplay(); //clear buffer
     display.display(); //display cleared screen
+    current_eeprom_addr += 4;
     
     
 
@@ -613,10 +599,21 @@ void testpainbit(void) {
   } else if (current_pain < level_seven_pain ) {
     display.setCursor(0,0);   
     display.println("Level 6 Pain Identified \n" ); 
+
+
+    Serial.println(current_eeprom_addr);
+
+    writeStringToEEPROM(current_eeprom_addr, F("L6")); //Store a level 6 pain identified 
+    //current_eeprom_addr += 4;
+    
+    Serial.println(readStringFromEEPROM(last_eeprom_addr));
+
+    
     display.display(); //Registeration text displayed on LCD
     delay(4000);
     display.clearDisplay(); //clear buffer
     display.display(); //display cleared screen
+    current_eeprom_addr += 4;
     
     
 
@@ -624,34 +621,68 @@ void testpainbit(void) {
   } else if (current_pain < level_eight_pain ) {
     display.setCursor(0,0);   
     display.println("Level 7 Pain Identified \n" ); 
+
+
+    Serial.println(current_eeprom_addr);
+
+    writeStringToEEPROM(current_eeprom_addr, F("L7")); //Store a level 7 pain identified 
+    
+    Serial.println(readStringFromEEPROM(last_eeprom_addr));
+    
     display.display(); //Registeration text displayed on LCD
     delay(4000);
     display.clearDisplay(); //clear buffer
     display.display(); //display cleared screen
+    current_eeprom_addr += 4;
     
     
     
   } else if (current_pain < level_nine_pain ) {
     display.setCursor(0,0);   
     display.println("Level 8 Pain Identified \n" ); 
+
+
+    Serial.println(current_eeprom_addr);
+
+    writeStringToEEPROM(current_eeprom_addr, F("L8")); //Store a level 8 pain identified 
+    
+    Serial.println(readStringFromEEPROM(last_eeprom_addr));
+    
     display.display(); //Registeration text displayed on LCD
     delay(4000);
     display.clearDisplay(); //clear buffer
     display.display(); //display cleared screen
+    current_eeprom_addr += 4;
     
      
   } else if (current_pain < level_ten_pain ) {
     display.setCursor(0,0);   
     display.println("Level 9 Pain Identified \n" ); 
+
+
+    Serial.println(current_eeprom_addr);
+
+    writeStringToEEPROM(current_eeprom_addr, F("L9")); //Store a level 9 pain identified 
+    
+    Serial.println(readStringFromEEPROM(last_eeprom_addr));
+    
     display.display(); //Registeration text displayed on LCD
     delay(4000);
     display.clearDisplay(); //clear buffer
     display.display(); //display cleared screen
-    
+    current_eeprom_addr += 4;
     
     
   } else {
     display.println("Level 10 Pain Identified ");
+    
+    Serial.println(current_eeprom_addr);
+
+    writeStringToEEPROM(current_eeprom_addr, F("L10")); //Store a level 10 pain identified 
+    
+    Serial.println(readStringFromEEPROM(last_eeprom_addr));
+    current_eeprom_addr += 4;
+    
   }
 
 
