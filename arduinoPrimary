@@ -1,4 +1,4 @@
-
+ 
 
 #include <EEPROM.h> //library that access' the EEPROM storage, where painbit stores callibrated and recorded pain levels
 
@@ -8,19 +8,12 @@
 #include <Adafruit_SSD1306.h>
 #include <Adafruit_AM2320.h>
 
-#include <TimeLib.h> //Module used to keep track of date and time
 
-#define TIME_HEADER  "T"   // Header tag for serial time sync message
-#define TIME_REQUEST  7    // ASCII bell character requests a time sync message 
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
 
-// Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
-// The pins for I2C are defined by the Wire-library. 
-// On an arduino UNO:       A4(SDA), A5(SCL)
-// On an arduino MEGA 2560: 20(SDA), 21(SCL)
-// On an arduino LEONARDO:   2(SDA),  3(SCL), ...
+
 #define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
 #define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
@@ -76,7 +69,7 @@ void setup() {
 
   // Clear the buffer
   display.clearDisplay();
-
+/*
   // Draw a single pixel in white
   display.drawPixel(10, 10, SSD1306_WHITE);
 
@@ -89,6 +82,7 @@ void setup() {
   // drawing operations and then update the screen all at once by calling
   // display.display(). These examples demonstrate both approaches...
 
+*/
   testpainbit();    // Execute Pain Level Registering
 
 }
@@ -110,8 +104,8 @@ void loop() {
 void writeStringToEEPROM(int addrOffset, const String &strToWrite)
 {
   byte len = strToWrite.length();
-  Serial.println("string len:");
-  Serial.println(len); //debugging 
+  //Serial.println("string len:");
+  //Serial.println(len); //debugging 
   
   EEPROM.write(addrOffset, len);
   for (int i = 0; i < len; i++)
@@ -124,7 +118,7 @@ String readStringFromEEPROM(int addrOffset)
 {
   int newStrLen = EEPROM.read(addrOffset);
 
-  Serial.println(addrOffset); //added for debugging
+  //Serial.println(addrOffset); //added for debugging
   
   char data[newStrLen + 1];
   for (int i = 0; i < newStrLen; i++)
