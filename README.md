@@ -16,3 +16,7 @@ To read back the levels of pain Stored in the EEPROM, the read_eeprom code can b
 Before starting a new user with the PainBit, all the EEPROM memory should be cleared which can be done using the eeprom_clear code, which was also taken from the Ardunio library of EEPROM code examples.
 
 Credits: Pieces of code were used from the below links. 
+https://www.youtube.com/watch?v=RjyulqVsz2o&list=WL&index=20&t=622s 
+https://www.youtube.com/watch?v=eW3SQCi0aTE&list=WL&index=24
+https://www.youtube.com/watch?v=7x1P80X1V3E&list=WL&index=26 
+And credits to William Dorval for code help. 
