@@ -1,4 +1,4 @@
-
+#Parts of code taken from Arduino EEPROM library examples of code. 
 
 #include <EEPROM.h>
 
